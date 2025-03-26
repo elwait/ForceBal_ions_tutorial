@@ -1,0 +1,327 @@
+$global
+keyfile interactions.key
+energy_unit kilocalories_per_mole
+$end
+ 
+$system
+name water
+geometry water_La.xyz
+$end
+ 
+$system
+name La
+geometry La.xyz
+$end
+ 
+$system
+name aa
+geometry La_water_1-0.xyz
+$end
+ 
+$system
+name ab
+geometry La_water_1-1.xyz
+$end
+ 
+$system
+name ac
+geometry La_water_1-2.xyz
+$end
+ 
+$system
+name ad
+geometry La_water_1-3.xyz
+$end
+ 
+$system
+name ae
+geometry La_water_1-4.xyz
+$end
+ 
+$system
+name af
+geometry La_water_1-5.xyz
+$end
+ 
+$system
+name ag
+geometry La_water_1-6.xyz
+$end
+ 
+$system
+name ah
+geometry La_water_1-7.xyz
+$end
+ 
+$system
+name ai
+geometry La_water_1-8.xyz
+$end
+ 
+$system
+name aj
+geometry La_water_1-9.xyz
+$end
+ 
+$system
+name ak
+geometry La_water_2-0.xyz
+$end
+ 
+$system
+name al
+geometry La_water_2-1.xyz
+$end
+ 
+$system
+name am
+geometry La_water_2-2.xyz
+$end
+ 
+$system
+name an
+geometry La_water_2-3.xyz
+$end
+ 
+$system
+name ao
+geometry La_water_2-4.xyz
+$end
+ 
+$system
+name ap
+geometry La_water_2-5.xyz
+$end
+ 
+$system
+name aq
+geometry La_water_2-6.xyz
+$end
+ 
+$system
+name ar
+geometry La_water_2-7.xyz
+$end
+ 
+$system
+name as
+geometry La_water_2-8.xyz
+$end
+ 
+$system
+name at
+geometry La_water_2-9.xyz
+$end
+ 
+$system
+name au
+geometry La_water_3-0.xyz
+$end
+ 
+$system
+name av
+geometry La_water_3-1.xyz
+$end
+ 
+$system
+name aw
+geometry La_water_3-2.xyz
+$end
+ 
+$system
+name ax
+geometry La_water_3-3.xyz
+$end
+ 
+$system
+name ay
+geometry La_water_3-4.xyz
+$end
+ 
+$system
+name az
+geometry La_water_3-5.xyz
+$end
+ 
+$interaction
+name BE_aa
+equation aa - water - La
+energy 1533.33
+weight 1.0
+$end
+ 
+$interaction
+name BE_ab
+equation ab - water - La
+energy 958.08
+weight 1.0
+$end
+ 
+$interaction
+name BE_ac
+equation ac - water - La
+energy 600.83
+weight 1.0
+$end
+ 
+$interaction
+name BE_ad
+equation ad - water - La
+energy 371.47
+weight 1.0
+$end
+ 
+$interaction
+name BE_ae
+equation ae - water - La
+energy 217.69
+weight 1.0
+$end
+ 
+$interaction
+name BE_af
+equation af - water - La
+energy 110.87
+weight 1.0
+$end
+ 
+$interaction
+name BE_ag
+equation ag - water - La
+energy 35.74
+weight 1.0
+$end
+ 
+$interaction
+name BE_ah
+equation ah - water - La
+energy -16.56
+weight 1.0
+$end
+ 
+$interaction
+name BE_ai
+equation ai - water - La
+energy -51.97
+weight 1.0
+$end
+ 
+$interaction
+name BE_aj
+equation aj - water - La
+energy -74.92
+weight 1.0
+$end
+ 
+$interaction
+name BE_ak
+equation ak - water - La
+energy -88.84
+weight 1.0
+$end
+ 
+$interaction
+name BE_al
+equation al - water - La
+energy -96.34
+weight 50.0
+$end
+ 
+$interaction
+name BE_am
+equation am - water - La
+energy -99.38
+weight 100.0
+$end
+ 
+$interaction
+name BE_an
+equation an - water - La
+energy -99.38
+weight 100.0
+$end
+ 
+$interaction
+name BE_ao
+equation ao - water - La
+energy -97.41
+weight 50.0
+$end
+ 
+$interaction
+name BE_ap
+equation ap - water - La
+energy -94.19
+weight 10.0
+$end
+ 
+$interaction
+name BE_aq
+equation aq - water - La
+energy -90.25
+weight 1.0
+$end
+ 
+$interaction
+name BE_ar
+equation ar - water - La
+energy -85.97
+weight 1.0
+$end
+ 
+$interaction
+name BE_as
+equation as - water - La
+energy -81.61
+weight 1.0
+$end
+ 
+$interaction
+name BE_at
+equation at - water - La
+energy -77.37
+weight 1.0
+$end
+ 
+$interaction
+name BE_au
+equation au - water - La
+energy -73.42
+weight 1.0
+$end
+ 
+$interaction
+name BE_av
+equation av - water - La
+energy -69.85
+weight 1.0
+$end
+ 
+$interaction
+name BE_aw
+equation aw - water - La
+energy -66.71
+weight 1.0
+$end
+ 
+$interaction
+name BE_ax
+equation ax - water - La
+energy -64.02
+weight 1.0
+$end
+ 
+$interaction
+name BE_ay
+equation ay - water - La
+energy -61.75
+weight 1.0
+$end
+ 
+$interaction
+name BE_az
+equation az - water - La
+energy -59.88
+weight 1.0
+$end
+ 
