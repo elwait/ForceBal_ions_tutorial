@@ -418,4 +418,3 @@ The `Ref.` column contains the QM interaction energies.
 The `Delta` column is the difference between the calculated and reference energies.
 
 The `Term` column is related to the gradient I think. I can't find anything in the docs or GitHub issues. Couldn't find the values anywhere else in the output either.
-
