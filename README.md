@@ -34,30 +34,30 @@ Inside the working directory, you need to prepare a few things.
 The overall structure at the end will be:
 
 ```
-working_dir                    # /work/eew947/sandia/REM_params in my case
-  |- opt_1.in                  # input file, has to end in .in
-  |- opt_1.out                # output file showing progress and final params
-  +- bin                       # contains Tinker cpu executables
+working_dir                       # /work/eew947/sandia/REM_params in my case
+  |- Gd_water_1.in                # input file, has to end in .in
+  |- Gd_water_1.out               # output file showing progress and final params
+  +- bin                          # contains Tinker cpu executables
   |   |- alchemy
   |   |- analyze
   |   |- anneal
-  |   |- <etc>                 # rest of Tinker executables
-  +- forcefield_1
-  |   |- amoeba09_la.prm       # starting forcefield, params being optimized have comments
-  +- targets                   # data ForceBal is matching to goes here
-  |   |- IE                    # Interaction Energies, structures, and related files
-  |   |   |- amoeba09_la.prm   # starting forcefield, params being optimized have comments
-  |   |   |- interactions.key  # has some simulation info and points to amoeba09_la.prm
-  |   |   |- interactions.txt  # info about the interactions, structures, energies, and weights
-  |   |   |- IE.dat            # lists the structures, energies, and weights for each point
-  |   |   |- La.xyz            # ion in Tinker format (with atom types and classes)
-  |   |   |- water.xyz         # ligand structure in Tinker format (with atom types and classes)
-  |   |   |- La_water_1-0.xyz  # complex *.xyz at 1st point, which has separation of ~1 A
-  |   |   |- La_water_1-1.xyz  # complex *.xyz at 2nd point, which has separation of ~1.1 A
-  |   |   |- <etc>             # complex .xyz for each point
+  |   |- <etc>                    # rest of Tinker executables
+  +- forcefield_Gd_water_1
+  |   |- amoeba09_Gd_1.prm        # starting forcefield, params being optimized have comments
+  +- targets                      # data ForceBal is matching to goes here
+  |   |- IE                       # Interaction Energies, structures, and related files
+  |   |   |- amoeba09_Gd_1.prm    # starting forcefield, params being optimized have comments
+  |   |   |- interactions.key     # has some simulation info and points to amoeba09_la.prm
+  |   |   |- interactions.txt     # info about the interactions, structures, energies, and weights
+  |   |   |- IE.dat               # lists the structures, energies, and weights for each point
+  |   |   |- Gd_t.xyz             # ion in Tinker format (with atom types and classes)
+  |   |   |- water_t.xyz          # ligand structure in Tinker format (with atom types and classes)
+  |   |   |- Gd_water_1-58_t.xyz  # complex *.xyz at 1st point, which has separation of ~1 A
+  |   |   |- Gd_water_1-68_t.xyz  # complex *.xyz at 2nd point, which has separation of ~1.1 A
+  |   |   |- <etc>                # complex .xyz for each point
   +- result
   |   |- opt_1 
-  |   |   |- amoeba09_la.prm # optimized force field, generated on completion
+  |   |   |- amoeba09_Gd_1.prm    # optimized force field, generated on completion
 ```
 
 ## bin (Tinker)
@@ -90,69 +90,70 @@ cd IE
 
 In the IE folder, you need:
 ```
-amoeba09_la.prm   # can probably have it elsewhere and put the path but this was fine
-interactions.key
+amoeba09_Gd_1.prm # can probably have it elsewhere and put the path but this was fine
+interactions.key  # Tinker key file with system settings and name of param file
 interactions.txt  # see next section about script
 IE.dat            # see section after next about script
 ```
 
 
 I  wrote scripts to prepare some of the files, so if you are using those, you need to:
-1. copy `amoeba09_la.prm` to targets/IE
-2. prepare `interactions.key`
-3. prepare `name_letter_energy_weight.txt`
-4. edit and run `Prep_InteractionsTXT.sh`  # now you have `interactions.txt`
-5. edit and run `Prep_IEdat.sh`            # now you have `IE.dat`
+1. cp `amoeba09_Gd_1.prm` to targets/IE/.                   # will be there if using my files             
+2. prepare `interactions.key` in targets/IE/.               # will be there if using my files
+3. prepare `name_letter_energy_weight.txt` in targets/IE/.  # will be there if using my files
+4. edit and run `Prep_InteractionsTXT.sh` in targets/IE/.   # now you have `interactions.txt`
+5. edit and run `Prep_IEdat.sh` in targets/IE/.             # now you have `IE.dat`
 
 
-### 1. copy `amoeba09_la.prm` to `targets/IE` and edit
+### 1. copy `amoeba09_Gd_1.prm` to `targets/IE` and edit
 
 
 If you are starting from my files:
-`amoeba09_la.prm` should already be in `targets/IE`
+`amoeba09_Gd_1.prm` should already be in `targets/IE`
 
 Check that the end of that file has a section with the parameters you are working on.
 It will be directly after the `polarize` section.
 
-In the case of La3+ with water, the section looks like this:
+In the case of Gd3+ with water, the section looks like this:
 
 
 ```
-# for La3+
+# for Gd3+
 
-
-atom         501   501    La3+   "Lanthanum Ion La+3"          57    138.91    0
-multipole    501   0    0               3.00000
+atom         507   507    Gd3+   "Gadolinium Ion Gd+3"         64    157.25    0
+multipole    507   0    0               3.00000
                                         0.00000    0.00000    0.00000
                                         0.00000
                                         0.00000    0.00000
                                         0.00000    0.00000    0.00000
 
 
-polarize     501          1.764  0.14                        # PRM 3
-vdw          501          3.92  0.940                        # PRM 2 3
+polarize     507          1.392  0.250                       # PRM 3
+vdw          507          2.000  0.900                       # PRM 2 3
 
 ```
 
 
 The 'atom' line lists the `atom_type` , `atom_class` symbol, name, atomic number, mass, and honestly I can't find what the last one is.
-For La3+ with water, we will get the default polarization and vdw parameters. We will then use those when working on acetate and acetamide.
+For Gd3+ with water, we will get the default polarization and vdw parameters. We will then use those when working on acetate and acetamide.
 
 #### Polarization
 The `polarize` line starts with the atom type.
-The atomic polarization is `1.764` in this example. That was taken directly from QM.
+`polarize     507          1.392  0.250                       # PRM 3`
 
-*Make sure that the polarization has been updated to reflect the current QM method.*
+The atomic polarizability is `1.392` in this example. That was taken directly from a QM polarizability calculation.
 
 The next number is the starting value for the polarization damping parameter. The `# PRM 3` at the end of the line indicates to ForceBalance that the third parameter in this line is being optimized.
 
 #### vdW
 The `vdw` line starts with the atom class. In this case, they are the same number. It is not always like that, as each different atom has a type but several atoms may be part of the same class.
+`vdw          507          2.000  0.900                       # PRM 2 3`
+
 The vdW parameters also include the well depth and the radius. Both of these parameters will be included in the optimization, which is why the line ends with `# PRM 2 3` .
 
 If you are starting from scratch:
 
-Copy `amoeba09_la.prm` to the directory.
+Copy `amoeba09.prm` to the directory.
 Then, add the section at the bottom. Polarization should come from QM.
 For the others, you can use the parameters from a similar ion as a starting point. Not sure that it matters too much.
 For lanthanides, you can start with La3+.
@@ -168,7 +169,7 @@ If you are doing it another way, check the example files to get an idea of what 
 An example of an `interactions.key` file is printed below:
 
 ```
-parameters       amoeba09_la.prm
+parameters       amoeba09_Gd_1.prm
 digits 10
 openmp-threads   1
 
@@ -212,17 +213,17 @@ Example:
 ```
 $system
 name water
-geometry water.xyz
+geometry water_t.xyz
 $end
 
 $system
-name La
-geometry La.xyz
+name Gd
+geometry Gd_t.xyz
 $end
 
 $system
 name aa
-geometry La_water_1-0.xyz
+geometry Gd_water_1-58_t.xyz
 $end
 ```
 
@@ -232,26 +233,27 @@ For example:
 ```
 $interaction
 name BE_aa
-equation aa - water - La
-energy 1533.33
+equation aa - water - Gd
+energy 41.327741
 weight 1.0
 $end
 ```
 
 `BE_aa` refers to the binding energy for the geometry called aa.
-Here, that is the La3+ - water complex with a separation of about 1 A (`La_water_1-0.xyz`)
+Here, that is the Gd3+ - water complex with a separation of about 1.58 A (`Gd_water_1-58.xyz`)
 
 `Energy(bind) = Energy(complex) - Energy(ligand) - Energy(ion)`
 
-So the La3+ - water binding energy at that geometry = `E(La_water_1-0.xyz) - E(water.xyz) - E(La.xyz)`
+So the Gd3+ - water binding energy at that geometry = `E(Gd_water_1-58_t.xyz) - E(water_t.xyz) - E(Gd_t.xyz)`
 
 or:
-`equation aa - water - La`
+`equation aa - water - Gd`
 
 Then, the binding energy is listed (in kcal/mol, according to the `$global` setting `energy_unit kilocalories_per_mole` in the beginning of the file:
-`energy 1533.33`
+`energy 41.327741`
 
 This is followed by the weight, which is 1.0 here, as we are around the repulsive wall rather than near the stable equilibrium geometry.
+This geometry is probably not going to occur very often in our simulations because it is unfavorable, so we are not prioritizing matching this point perfectly.
 `weight 1.0`
 
 ### 4. Edit and run `Prep_IEdat.sh`
@@ -268,32 +270,23 @@ Take a look at it.
 There should be three columns: `structure` `energy` `weight`
 It should look something like this:
 ```
-La_water_1-0.xyz   1533.33    1.0
-La_water_1-1.xyz   958.08    1.0
-La_water_1-2.xyz   600.83    1.0
-La_water_1-3.xyz   371.47    1.0
-La_water_1-4.xyz   217.69    1.0
-La_water_1-5.xyz   110.87    1.0
-La_water_1-6.xyz   35.74    1.0
-La_water_1-7.xyz   -16.56    1.0
-La_water_1-8.xyz   -51.97    1.0
-La_water_1-9.xyz   -74.92    1.0
-La_water_2-0.xyz   -88.84    1.0
-La_water_2-1.xyz   -96.34    50.0
-La_water_2-2.xyz   -99.38    100.0
-La_water_2-3.xyz   -99.38    100.0
-La_water_2-4.xyz   -97.41    50.0
-La_water_2-5.xyz   -94.19    10.0
-La_water_2-6.xyz   -90.25    1.0
-La_water_2-7.xyz   -85.97    1.0
-La_water_2-8.xyz   -81.61    1.0
-La_water_2-9.xyz   -77.37    1.0
-La_water_3-0.xyz   -73.42    1.0
-La_water_3-1.xyz   -69.85    1.0
-La_water_3-2.xyz   -66.71    1.0
-La_water_3-3.xyz   -64.02    1.0
-La_water_3-4.xyz   -61.75    1.0
-La_water_3-5.xyz   -59.88    1.0
+Gd_water_1-58_t.xyz     41.327741    1.0
+Gd_water_1-68_t.xyz    -18.434357    1.0
+Gd_water_1-78_t.xyz    -57.514739    1.0
+Gd_water_1-88_t.xyz    -81.666862    1.0
+Gd_water_1-98_t.xyz    -95.746912    10.0
+Gd_water_2-08_t.xyz   -102.656860    50.0
+Gd_water_2-18_t.xyz   -105.087722    100.0
+Gd_water_2-28_t.xyz   -103.831231    75.0
+Gd_water_2-38_t.xyz   -100.748939    10.0
+Gd_water_2-48_t.xyz    -96.308828    1.0
+Gd_water_2-58_t.xyz    -91.125346    1.0
+Gd_water_2-68_t.xyz    -85.864819    1.0
+Gd_water_2-78_t.xyz    -80.453936    1.0
+Gd_water_2-88_t.xyz    -75.236715    1.0
+Gd_water_2-98_t.xyz    -70.145998    1.0
+Gd_water_3-08_t.xyz    -65.302937    1.0
+Gd_water_3-18_t.xyz    -60.748274    1.0
 ```
 
 
@@ -305,12 +298,17 @@ Now you are all done with setting up `targets`.
 ## opt_1.in (Input File)
 
 Now you must prepare the input file.
-I have called this `opt_1.in` and it is included as an example.
+I have called this `Gd_water_1.in` and it is included as an example.
 I got it from Dr. Chengwen Liu and updated/inserted the following lines:
 
 ```
 # (string) Directory containing force fields, relative to project directory
-ffdir forcefield_1
+ffdir forcefield_Gd_water_1
+```
+
+```
+# Which parameter file we are starting with
+forcefield amoeba09_Gd_1.prm
 ```
 
 ```
@@ -331,7 +329,7 @@ $end
 ## forcefield_1 (starting forcefield)
 We already prepared the parameter file, so we just need to copy it over.
 
-`cp ${your_dir}/REM_params/targets/IE/ameoba_09.prm ${your_dir}/REM_params/forcefield_1/.`
+`cp targets/IE/amoeba09_Gd_1.prm forcefield_Gd_water_1/.`
 
 
 ## Run ForceBalance
@@ -340,12 +338,12 @@ Now we are set up and can run ForceBalance!
 ```
 cd ${your_dir}/REM_params # if you aren't there already
 conda activate forcebal
-nohup ForceBalance.py opt_1.in > opt_1.out &
+nohup ForceBalance.py Gd_water_1.in > Gd_water_1.out &
 ```
 
 
-## opt_1.out (Generated Output File)
-ForceBalance will generate `opt_1.out` in the working directory with updated progress and finally, the optimized parameters.
+## Gd_water_1.out (Generated Output File)
+ForceBalance will generate `Gd_water_1.out` in the working directory with updated progress and finally, the optimized parameters.
 When ForceBalance is finished, the end of the `*.out` file will look something like this:
 
 
@@ -357,10 +355,10 @@ When ForceBalance is finished, the end of the `*.out` file will look something l
    1 [  4.1900e+00 ] : VDWS/501
    2 [  6.8965e-02 ] : VDWT/501
 ----------------------------------------------------------
-#==============================================================================#
-#|  The force field has been written to the result/opt_1 directory.  |#
-#|    Input file with optimization parameters saved to opt_1.sav.    |#
-#==============================================================================#
+#==========================================================================#
+#|  The force field has been written to the result/Gd_water_1 directory.  |#
+#|    Input file with optimization parameters saved to Gd_water_1.sav.    |#
+#==========================================================================#
 Wall time since calculation start: 1203.6 seconds
 #========================================================#
 #|                Calculation Finished.                 |#
@@ -369,7 +367,7 @@ Wall time since calculation start: 1203.6 seconds
 ```
 
 
-The optimized forcefield will also be saved to `/result/opt_1/amoeba09_la.prm`
+The optimized forcefield will also be saved to `/result/Gd_water_1/amoeba09_Gd_1.prm`
 
 
 The energies from Tinker `analyze` for each point using the optimized parameters are also in the output file.
@@ -397,15 +395,6 @@ BE_an                       -84.674   -99.380    14.706  21628.05075
 BE_ao                       -81.393   -97.410    16.017  12827.06623
 BE_ap                       -77.541   -94.190    16.649   2771.81532
 BE_aq                       -73.385   -90.250    16.865    284.41862
-BE_ar                       -69.115   -85.970    16.855    284.09716
-BE_as                       -64.864   -81.610    16.746    280.41530
-BE_at                       -60.728   -77.370    16.642    276.94626
-BE_au                       -56.770   -73.420    16.650    277.20905
-BE_av                       -53.031   -69.850    16.819    282.87173
-BE_aw                       -49.533   -66.710    17.177    295.04338
-BE_ax                       -46.285   -64.020    17.735    314.52878
-BE_ay                       -43.285   -61.750    18.465    340.93963
-BE_az                       -40.526   -59.880    19.354    374.57908
 -----------------------------------------------------------------------
 ```
 
