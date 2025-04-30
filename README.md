@@ -94,6 +94,7 @@ amoeba09_Gd_1.prm # can probably have it elsewhere and put the path but this was
 interactions.key  # Tinker key file with system settings and name of param file
 interactions.txt  # see next section about script
 IE.dat            # see section after next about script
+*_t.xyz           # all the structures in Tinker format. See second section after next
 ```
 
 
@@ -103,6 +104,7 @@ I  wrote scripts to prepare some of the files, so if you are using those, you ne
 3. prepare `name_letter_energy_weight.txt` in `targets/IE/.`  # will be there if using my files
 4. edit and run `Prep_InteractionsTXT.sh` in `targets/IE/.`   # now you have `interactions.txt`
 5. edit and run `Prep_IEdat.sh` in `targets/IE/.`             # now you have `IE.dat`
+6. edit and run `Prep_tinkerXYZ.sh`                           # will make all the structures you need
 
 
 ### 1. copy `amoeba09_Gd_1.prm` to `targets/IE` and edit
@@ -256,7 +258,7 @@ This is followed by the weight, which is 1.0 here, as we are around the repulsiv
 This geometry is probably not going to occur very often in our simulations because it is unfavorable, so we are not prioritizing matching this point perfectly.
 `weight 1.0`
 
-### 4. Edit and run `Prep_IEdat.sh`
+### 5. Edit and run `Prep_IEdat.sh`
 `Prep_IEdat.sh` is for preparing `IE.dat`:
 
 Edit this script so that the variables `ion` and `ligand` are correct.
@@ -289,6 +291,93 @@ Gd_water_3-08_t.xyz    -65.302937    1.0
 Gd_water_3-18_t.xyz    -60.748274    1.0
 ```
 
+### 6. Edit and run `Prep_tinkerXYZ.sh`  
+You need to have Tinker .xyz files for the ion alone (`Gd_t.xyz`) and the ligand alone (`water_t.xyz`).
+
+Examples:
+`Gd_t.xyz`
+
+```
+1   Gd
+1   Gd  -2.184896     0.000000    0.000000    507
+```
+
+`water_t.xyz`
+
+```
+3   water
+1   O    0.28673552221100      2.08037937259293     -0.00000000000218    36   3   2
+2   H    0.37675873889463      2.66196281370438      0.76123559118011    37   1
+3   H    0.37675873889437      2.66196281370269     -0.76123559117793    37   1
+```
+
+
+Edit `Prep_tinkerXYZ.sh`:
+
+Make sure `ion` and `ligand` variables are correct.
+
+If starting from my files, they should already be:
+
+```
+ion="Gd"
+ligand="water"
+```
+
+
+Update `DIR` if `$PWD` doesn't work with your setup.
+
+**Make sure `xyz_to_replace` is the X coordinate for Gd in the template complex .xyz file**
+
+If starting from my files, it should be:
+
+`x_to_replace="2.184896"`
+
+Double check that the file naming conventions are what you want.
+
+Make sure the template xyz is in `targets/IE` and has the correct atom types, etc.
+
+`bash Prep_tinkerXYZ.sh`
+
+Check that you have the xyz files you expect:
+
+`ls -ltr *xyz`
+
+Should give something like:
+
+```
+-rw-r--r--. 1 eew947 users  57 Apr  9 10:48 Gd_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr  9 10:49 Gd_water_template_t.xyz
+-rw-r--r--. 1 eew947 users 254 Apr  9 14:06 water_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_1-58_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_1-68_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_1-78_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_1-88_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_1-98_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-08_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-18_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-28_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-38_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-48_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-58_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-68_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-78_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-88_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_2-98_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_3-08_t.xyz
+-rw-r--r--. 1 eew947 users 226 Apr 30 13:12 Gd_water_3-18_t.xyz
+```
+
+Check that the complex xyz files differ how you would expect:
+
+```
+[eew947@node34 Gd_water]$ diff Gd_water_1-58_t.xyz Gd_water_1-68_t.xyz
+2c2
+< 1   Gd  -1.584896     0.000000    0.000000    507
+---
+> 1   Gd  -1.684896     0.000000    0.000000    507
+```
+
+
 
 Now you are all done with setting up `targets`.
 
@@ -298,7 +387,9 @@ Now you are all done with setting up `targets`.
 ## opt_1.in (Input File)
 
 Now you must prepare the input file.
+
 I have called this `Gd_water_1.in` and it is included as an example.
+
 I got it from Dr. Chengwen Liu and updated/inserted the following lines:
 
 ```
