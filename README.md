@@ -8,6 +8,8 @@ which will be something like:
 `conda install --strict-channel-priority -c conda-forge forcebalance`
 
 # Change ForceBalance to work with Tinker pairwise parameters
+I don't think we actually need this for the ion with water, but we will need it later when dealing with acetate and acetamide.
+
 If you want to optimize `POLPAIR`, `VDWPAIR`, or `VDWPR` , you have to edit `tinkerio.py`
 
 In my case, 
