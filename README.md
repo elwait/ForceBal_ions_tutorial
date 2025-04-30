@@ -36,7 +36,7 @@ The overall structure at the end will be:
 ```
 working_dir                    # /work/eew947/sandia/REM_params in my case
   |- opt_1.in                  # input file, has to end in .in
-  |- opt_1..out                # output file showing progress and final params
+  |- opt_1.out                # output file showing progress and final params
   +- bin                       # contains Tinker cpu executables
   |   |- alchemy
   |   |- analyze
