@@ -141,6 +141,7 @@ For Gd3+ with water, we will get the default polarization and vdw parameters. We
 
 #### Polarization
 The `polarize` line starts with the atom type.
+
 `polarize     507          1.392  0.250                       # PRM 3`
 
 The atomic polarizability is `1.392` in this example. That was taken directly from a QM polarizability calculation.
@@ -148,7 +149,9 @@ The atomic polarizability is `1.392` in this example. That was taken directly fr
 The next number is the starting value for the polarization damping parameter. The `# PRM 3` at the end of the line indicates to ForceBalance that the third parameter in this line is being optimized.
 
 #### vdW
-The `vdw` line starts with the atom class. In this case, they are the same number. It is not always like that, as each different atom has a type but several atoms may be part of the same class.
+The `vdw` line starts with the atom class. In this case, they are the same number.
+It is not always like that, as each different atom has a type but several atoms may be part of the same class.
+
 `vdw          507          2.000  0.900                       # PRM 2 3`
 
 The vdW parameters also include the well depth and the radius. Both of these parameters will be included in the optimization, which is why the line ends with `# PRM 2 3` .
@@ -156,14 +159,20 @@ The vdW parameters also include the well depth and the radius. Both of these par
 If you are starting from scratch:
 
 Copy `amoeba09.prm` to the directory.
+
 Then, add the section at the bottom. Polarization should come from QM.
+
 For the others, you can use the parameters from a similar ion as a starting point. Not sure that it matters too much.
+
 For lanthanides, you can start with La3+.
+
 Make sure that you choose a new atom type number (and that this number is consistent in all your Tinker files).
 
 ### Prepare `interactions.txt` and `IE.dat`
 I have scripts for preparing these files.
+
 This section will include instructions using those scripts.
+
 If you are doing it another way, check the example files to get an idea of what they should be like.
 
 
@@ -181,11 +190,17 @@ polar-eps 0.00001
 
 ### 3. Make `name_letter_energy_weight.txt`
 First, you need to prepare `name_letter_energy_weight.txt` (example included in folder).
+
 This file includes columns for the name I used to represent the structure, letter for use as an index with ForceBalance, the QM energy of that structure, and the weight you want ForceBalance to place on matching at that point.
+
 Typically, structures/points closer to the energetic minimum are given more weight (`100.0`).
+
 Points further away are given a weight of `1.0`.
+
 You can play around with different intermediate weights and higher weight on different parts of the interaction energy curve.
+
 I dislike this aspect because it feels like more of an art than a science, and I'd like to find a better way eventually.
+
 I have used a Boltzmann distribution to determine the weights before but it basically made only the equilibrium have weight `100.0` and everything else was `1.0`.
 
 
@@ -194,14 +209,18 @@ I have used a Boltzmann distribution to determine the weights before but it basi
 `Prep_InteractionsTXT.sh` is for preparing `interactions.txt`:
 
 Edit this script so that the variables `ion` and `ligand` are correct.
+
 Check that `ion_xyz` and `ligand_xyz` fit your file names (or change them).
+
 `nohup bash Prep_InteractionsTXT.sh > Prep_InteractionsTXT.out &`
 
 Check that `interactions.txt` was created:
+
 `ls -ltr interactions.txt`
 
 Take a look at it.
 There should be a section of global parameters at the top:
+
 ```
 $global
 keyfile interactions.key
@@ -211,7 +230,9 @@ $end
 
 After that, there should be many sets of 4 lines.
 Each group of `$system` lines corresponds to a structure.
+
 Example:
+
 ```
 $system
 name water
@@ -231,7 +252,9 @@ $end
 
 Next, there will be groups of `$interaction` lines.
 They include information about the ineraction.
+
 For example:
+
 ```
 $interaction
 name BE_aa
@@ -242,6 +265,7 @@ $end
 ```
 
 `BE_aa` refers to the binding energy for the geometry called aa.
+
 Here, that is the Gd3+ - water complex with a separation of about 1.58 A (`Gd_water_1-58.xyz`)
 
 `Energy(bind) = Energy(complex) - Energy(ligand) - Energy(ion)`
@@ -249,13 +273,17 @@ Here, that is the Gd3+ - water complex with a separation of about 1.58 A (`Gd_wa
 So the Gd3+ - water binding energy at that geometry = `E(Gd_water_1-58_t.xyz) - E(water_t.xyz) - E(Gd_t.xyz)`
 
 or:
+
 `equation aa - water - Gd`
 
 Then, the binding energy is listed (in kcal/mol, according to the `$global` setting `energy_unit kilocalories_per_mole` in the beginning of the file:
+
 `energy 41.327741`
 
 This is followed by the weight, which is 1.0 here, as we are around the repulsive wall rather than near the stable equilibrium geometry.
+
 This geometry is probably not going to occur very often in our simulations because it is unfavorable, so we are not prioritizing matching this point perfectly.
+
 `weight 1.0`
 
 ### 5. Edit and run `Prep_IEdat.sh`
@@ -263,14 +291,18 @@ This geometry is probably not going to occur very often in our simulations becau
 
 Edit this script so that the variables `ion` and `ligand` are correct.
 Once again, check that `ion_xyz` and `ligand_xyz` fit your file names.
+
 `nohup bash Prep_IEdat.sh > Prep_IEdat.out &`
 
 Check that `IE.dat` was created:
+
 `ls -ltr IE.dat`
 
 Take a look at it.
 There should be three columns: `structure` `energy` `weight`
+
 It should look something like this:
+
 ```
 Gd_water_1-58_t.xyz     41.327741    1.0
 Gd_water_1-68_t.xyz    -18.434357    1.0
@@ -295,6 +327,7 @@ Gd_water_3-18_t.xyz    -60.748274    1.0
 You need to have Tinker .xyz files for the ion alone (`Gd_t.xyz`) and the ligand alone (`water_t.xyz`).
 
 Examples:
+
 `Gd_t.xyz`
 
 ```
@@ -435,6 +468,7 @@ nohup ForceBalance.py Gd_water_1.in > Gd_water_1.out &
 
 ## Gd_water_1.out (Generated Output File)
 ForceBalance will generate `Gd_water_1.out` in the working directory with updated progress and finally, the optimized parameters.
+
 When ForceBalance is finished, the end of the `*.out` file will look something like this:
 
 
