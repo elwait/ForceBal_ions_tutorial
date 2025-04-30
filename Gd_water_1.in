@@ -18,7 +18,7 @@ penalty_type L2
 jobtype NEWTON 
  
 # Path to TINKER
-tinkerpath /work/eew947/sandia/La_params_03-26-25/bin
+tinkerpath bin
 
 # (list) The names of force fields, corresponding to directory forcefields/file_name.(itp|gen)
 forcefield amoeba09_Gd_1.prm
@@ -27,7 +27,7 @@ forcefield amoeba09_Gd_1.prm
 maxstep 100
 
 # (float) Convergence criterion of step size (just needs to fall below this threshold)
-convergence_step 			0.001
+convergence_step 			  0.001
 convergence_objective 0.001 
 convergence_gradient 	0.001
 
