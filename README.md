@@ -98,11 +98,11 @@ IE.dat            # see section after next about script
 
 
 I  wrote scripts to prepare some of the files, so if you are using those, you need to:
-1. cp `amoeba09_Gd_1.prm` to targets/IE/.                   # will be there if using my files             
-2. prepare `interactions.key` in targets/IE/.               # will be there if using my files
-3. prepare `name_letter_energy_weight.txt` in targets/IE/.  # will be there if using my files
-4. edit and run `Prep_InteractionsTXT.sh` in targets/IE/.   # now you have `interactions.txt`
-5. edit and run `Prep_IEdat.sh` in targets/IE/.             # now you have `IE.dat`
+1. cp `amoeba09_Gd_1.prm` to `targets/IE/.`                   # will be there if using my files             
+2. prepare `interactions.key` in `targets/IE/.`               # will be there if using my files
+3. prepare `name_letter_energy_weight.txt` in `targets/IE/.`  # will be there if using my files
+4. edit and run `Prep_InteractionsTXT.sh` in `targets/IE/.`   # now you have `interactions.txt`
+5. edit and run `Prep_IEdat.sh` in `targets/IE/.`             # now you have `IE.dat`
 
 
 ### 1. copy `amoeba09_Gd_1.prm` to `targets/IE` and edit
