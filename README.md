@@ -195,6 +195,29 @@ First, you need to prepare `name_letter_energy_weight.txt` (example included in 
 
 This file includes columns for the name I used to represent the structure, letter for use as an index with ForceBalance, the QM energy of that structure, and the weight you want ForceBalance to place on matching at that point.
 
+Example:
+
+```
+1-52    a    45.413743    1.0     1.515603
+1-62    b   -23.801829    1.0     1.615603
+1-72    c   -67.676824    1.0     1.715603
+1-82    d   -94.019152    1.0     1.815603
+1-92    e  -108.592987    50.0    1.915603
+2-02    f  -115.171177    50.0    2.015603
+2-12    g  -116.600046    100.0   2.115603
+2-22    h  -114.695735    10.0    2.215603
+2-32    i  -110.834414    1.0     2.315603
+2-42    j  -105.720989    1.0     2.415603
+2-52    k   -99.980113    1.0     2.515603
+2-62    l   -93.926545    1.0     2.615603
+2-72    m   -87.941580    1.0     2.715603
+2-82    n   -82.051156    1.0     2.815603
+2-92    o   -76.296650    1.0     2.915603
+3-02    p   -70.925658    1.0     3.015603
+3-12    q   -65.862095    1.0     3.115603
+3-22    r   -61.092578    1.0     3.215603
+```
+
 Typically, structures/points closer to the energetic minimum are given more weight (`100.0`).
 
 Points further away are given a weight of `1.0`.
@@ -455,7 +478,12 @@ $end
 ## forcefield_1 (starting forcefield)
 We already prepared the parameter file, so we just need to copy it over.
 
-`cp targets/IE/amoeba09_Gd_1.prm forcefield_Gd_water_1/.`
+If you haven't already, make the forcefield directory, and then copy the parameter file into it.
+
+```
+mkdir forcefield_Gd_water_1
+cp targets/IE/amoeba09_Gd_1.prm forcefield_Gd_water_1/.
+```
 
 
 ## Run ForceBalance
@@ -534,3 +562,72 @@ The `Ref.` column contains the QM interaction energies.
 The `Delta` column is the difference between the calculated and reference energies.
 
 The `Term` column is related to the gradient I think. I can't find anything in the docs or GitHub issues. Couldn't find the values anywhere else in the output either.
+
+
+# Plot results
+
+The way I have my files set up, the absolute value of the ion X coordinate is also the ion-ligand separation distance.
+If you have the `ion`_`ligand`_name_letter_energy_weight_dist.txt file, the distance is the last column.
+
+I plot the MM model energies (second column of the results in the .out file shown above) and QM energies (third column) at each separation distance.
+
+I also plot the delta (difference between MM result and QM target), which is the 4th column in the .out results.
+
+
+# Edit and start another round
+
+If I want to change the weights on different points of the curve and try again, this is what I do:
+
+`mkdir forcefield_Gd_water_2`
+
+Copy the .prm file and change the starting parameters if I think it will help.
+
+`cp amoeba09_Gd_1.prm amoeba09_Gd_2.prm`
+
+Make sure I have that everywhere it needs to be.
+
+```
+cp amoeba09_Gd_2.prm forcefield_Gd_water_2/.
+cp amoeba09_Gd_2.prm targets/IE/.
+```
+
+Copy input file and make sure it is updated.
+
+```
+cp Gd_water_1.in Gd_water_2.in
+sed -i "s/_1/_2/g" Gd_water_2.in  # replaces ffdir and prm file names
+```
+
+Go to `targets/IE` and update those files.
+
+```
+cd targets/IE
+rm interactions.txt
+rm IE.dat
+sed -i "s/amoeba09_Gd_1/amoeba09_Gd_2/g" interactions.key  # make sure correct prm file is used
+```
+
+Next, edit `Gd_water_name_letter_energy_weight_dist.txt` to have the new weights.
+
+Then, run the prep scripts for `interactions.txt` and `IE.dat` again.
+
+```
+bash Prep_IEdat.sh
+bash Prep_InteractionsTXT.sh
+```
+
+Go back to the main directory. Activate the conda env if it isn't active currently.
+
+```
+cd ../../
+conda activate forcebal
+```
+
+Finally, run again.
+
+`nohup ForceBalance.py Gd_water_2.in > Gd_water_2.out &`
+
+And repeat as long as you need. :)
+
+
+
